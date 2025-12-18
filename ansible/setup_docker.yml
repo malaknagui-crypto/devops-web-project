@@ -1,0 +1,42 @@
+---
+- name: Setup Docker on Target VM
+  hosts: all
+  become: yes
+  tasks:
+   - name: Update apt cache
+     apt:
+      update_cache: yes
+
+
+   - name: Install required packages
+     apt:
+      pkg:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - software-properties-common
+        - python3-pip
+      state: latest
+
+   - name: Add Docker GPG apt Key
+     apt_key:
+       url: https://download.docker.com/linux/ubuntu/gpg
+       state: present
+
+   - name: Add Docker Repository
+     apt_repository:
+       repo: deb https://download.docker.com/linux/ubuntu jammy stable
+       state: present
+
+   - name: Install Docker CE
+     apt:
+       update_cache: yes
+       name: docker-ce
+       state: latest
+
+   - name: Ensure Docker is running
+     service:
+       name: docker
+       state: started
+       enabled: yes
+
