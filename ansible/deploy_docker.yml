@@ -1,0 +1,14 @@
+---
+- name: Deploy Docker Container
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Pull latest image from Docker Hub
+      shell: docker pull malaknagui9/my-devops-site:latest
+
+    - name: Stop and remove old container (if it exits)
+      shell: docker rm -f my-web-server || true
+
+    - name: Run new container
+      shell: docker run -d --name my-web-server -p 8080:80 malaknagui9/my-devops-site:latest
+
